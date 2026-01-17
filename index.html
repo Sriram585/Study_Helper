@@ -45,6 +45,55 @@
     <!-- 3D Background Layer -->
     <div id="3d-graph" class="absolute inset-0 z-0 opacity-40 transition-opacity duration-1000"></div>
 
+    <!-- System Boot / Onboarding Modal -->
+    <div id="boot-modal" class="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <div class="max-w-2xl w-full p-8 border border-neon-cyan/30 bg-black/90 backdrop-blur-xl relative overflow-hidden">
+            <!-- Animated Scanline -->
+            <div class="absolute inset-x-0 top-0 h-1 bg-neon-cyan/50 shadow-[0_0_20px_#00f3ff] animate-scanline"></div>
+            
+            <h2 class="text-3xl font-mono font-bold text-neon-cyan mb-6 tracking-tighter">
+                INITIALIZING <span class="animate-pulse">NEURAL LINK...</span>
+            </h2>
+            
+            <div class="space-y-6 font-mono text-sm text-gray-300">
+                <div class="flex items-start gap-4">
+                    <div class="p-2 border border-neon-cyan/20 rounded bg-neon-cyan/5 text-neon-cyan">
+                        <i data-lucide="network" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold mb-1">THE NAVIGATOR</h3>
+                        <p class="text-xs text-gray-400">Your knowledge graph. It tracks gaps in your understanding in real-time.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="p-2 border border-neon-purple/20 rounded bg-neon-purple/5 text-neon-purple">
+                        <i data-lucide="code-2" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold mb-1">THE WORKSPACE</h3>
+                        <p class="text-xs text-gray-400">Intelligent editor with "Code DNA" complexity analysis.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="p-2 border border-white/20 rounded bg-white/5 text-white">
+                        <i data-lucide="bot" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold mb-1">SOCRATIC CORE</h3>
+                        <p class="text-xs text-gray-400">Ask questions. It won't give answers; it grounds you in logic.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="boot-btn" class="mt-8 w-full py-4 border border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-black transition-all font-bold tracking-widest uppercase text-sm group relative overflow-hidden">
+                <span class="relative z-10 group-hover:tracking-[0.5em] transition-all duration-500">Engage System</span>
+                <div class="absolute inset-0 bg-neon-cyan transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out origin-left"></div>
+            </button>
+        </div>
+    </div>
+
     <!-- Phase 1: Holographic Landing -->
     <div id="landing-phase" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-700">
         <div class="text-center space-y-8 animate-fade-in-up">
