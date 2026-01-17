@@ -57,11 +57,14 @@ async def chat_endpoint(request: ChatRequest):
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Serves the frontend
-# Note: In a production App Router Next.js app this wouldn't be needed, 
-# but for this standalone HTML setup, Python serves the static files.
-app.mount("/", StaticFiles(directory=".", html=True), name="static")
+# Handle Favicon (Prevent 404 logs)
+@app.get("/favicon.ico")
+async def favicon():
+    return ""
+
+# Serve the frontend from 'public' directory
+app.mount("/", StaticFiles(directory="public", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8000)
