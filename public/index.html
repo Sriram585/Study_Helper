@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Helper | Cyber-Cockpit</title>
+    <title>Study Helper | React-Enhanced</title>
     
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Tailwind CSS (Play CDN for rapid prototyping) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,164 +33,24 @@
             }
         }
     </script>
-
-    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles/main.css">
+
+    <!-- React Dependencies (No-Build) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     
-    <!-- 3D Graph Engine -->
+    <!-- 3D Engine & Monaco Loader -->
     <script src="//unpkg.com/3d-force-graph"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
 </head>
 <body class="bg-void-black text-white overflow-hidden h-screen w-screen selection:bg-neon-cyan selection:text-black font-sans">
-
-    <!-- 3D Background Layer -->
-    <div id="3d-graph" class="absolute inset-0 z-0 opacity-40 transition-opacity duration-1000"></div>
-
-    <!-- System Boot / Onboarding Modal -->
-    <div id="boot-modal" class="fixed inset-0 z-[100] bg-black flex items-center justify-center">
-        <div class="max-w-2xl w-full p-8 border border-neon-cyan/30 bg-black/90 backdrop-blur-xl relative overflow-hidden">
-            <!-- Animated Scanline -->
-            <div class="absolute inset-x-0 top-0 h-1 bg-neon-cyan/50 shadow-[0_0_20px_#00f3ff] animate-scanline"></div>
-            
-            <h2 class="text-3xl font-mono font-bold text-neon-cyan mb-6 tracking-tighter">
-                INITIALIZING <span class="animate-pulse">NEURAL LINK...</span>
-            </h2>
-            
-            <div class="space-y-6 font-mono text-sm text-gray-300">
-                <div class="flex items-start gap-4">
-                    <div class="p-2 border border-neon-cyan/20 rounded bg-neon-cyan/5 text-neon-cyan">
-                        <i data-lucide="network" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-bold mb-1">THE NAVIGATOR</h3>
-                        <p class="text-xs text-gray-400">Your knowledge graph. It tracks gaps in your understanding in real-time.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <div class="p-2 border border-neon-purple/20 rounded bg-neon-purple/5 text-neon-purple">
-                        <i data-lucide="code-2" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-bold mb-1">THE WORKSPACE</h3>
-                        <p class="text-xs text-gray-400">Intelligent editor with "Code DNA" complexity analysis.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <div class="p-2 border border-white/20 rounded bg-white/5 text-white">
-                        <i data-lucide="bot" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-bold mb-1">SOCRATIC CORE</h3>
-                        <p class="text-xs text-gray-400">Ask questions. It won't give answers; it grounds you in logic.</p>
-                    </div>
-                </div>
-            </div>
-
-            <button id="boot-btn" class="mt-8 w-full py-4 border border-neon-cyan text-neon-cyan hover:bg-neon-cyan hover:text-black transition-all font-bold tracking-widest uppercase text-sm group relative overflow-hidden">
-                <span class="relative z-10 group-hover:tracking-[0.5em] transition-all duration-500">Engage System</span>
-                <div class="absolute inset-0 bg-neon-cyan transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out origin-left"></div>
-            </button>
-        </div>
-    </div>
-
-    <!-- Phase 1: Holographic Landing -->
-    <div id="landing-phase" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-700">
-        <div class="text-center space-y-8 animate-fade-in-up">
-            <h1 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]">
-                NEURAL NEXUS
-            </h1>
-            <p class="text-cyan-100/70 text-lg tracking-widest uppercase">Cyber-Minimalist Learning Engine</p>
-            
-            <div class="relative group w-[500px] mx-auto mt-12">
-                <div class="absolute -inset-1 bg-gradient-to-r from-neon-cyan to-neon-purple rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                <input type="text" 
-                    id="concept-input" 
-                    placeholder="What concept is confusing you?" 
-                    class="relative w-full bg-black border border-white/10 rounded-lg py-4 px-6 text-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan focus:border-transparent transition-all shadow-2xl"
-                >
-                <i data-lucide="search" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 w-6 h-6"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Phase 2: The Cockpit (Initially Hidden) -->
-    <main id="cockpit-phase" class="relative z-10 w-full h-full grid grid-cols-12 gap-0 hidden opacity-0 transition-opacity duration-1000">
-        
-        <!-- Left Panel: Navigator -->
-        <section class="col-span-3 border-r border-white/10 bg-glass-black/50 flex flex-col backdrop-blur-md">
-            <header class="p-4 border-b border-white/10 flex items-center justify-between">
-                <span class="text-neon-cyan font-mono text-sm tracking-wider flex items-center gap-2">
-                    <i data-lucide="network" class="w-4 h-4"></i> NAVIGATOR
-                </span>
-            </header>
-            <div class="flex-1 p-4 overflow-y-auto">
-                <div class="text-xs text-gray-500 font-mono mb-2">ACTIVE NODES</div>
-                <!-- Mock Node List -->
-                <ul class="space-y-2" id="node-list">
-                    <!-- Javascript will populate this -->
-                </ul>
-            </div>
-        </section>
-
-        <!-- Center Panel: Workspace -->
-        <section class="col-span-6 flex flex-col bg-transparent relative">
-             <!-- Monaco Editor Container -->
-            <div id="editor-container" class="flex-1 w-full h-full"></div>
-            
-            <!-- Code DNA Sequencer (Overlay) -->
-            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-800">
-                <div id="dna-bar" class="h-full w-[0%] bg-neon-cyan shadow-[0_0_10px_#00f3ff] transition-all duration-300"></div>
-            </div>
-            <div class="absolute bottom-2 right-4 text-xs font-mono text-neon-cyan bg-black/80 px-2 py-1 rounded border border-neon-cyan/30">
-                COMPLEXITY: <span id="complexity-label">O(1)</span>
-            </div>
-        </section>
-
-        <!-- Right Panel: Socratic AI -->
-        <section class="col-span-3 border-l border-white/10 bg-glass-black/50 flex flex-col backdrop-blur-md">
-            <header class="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
-                <span class="text-neon-purple font-mono text-sm tracking-wider flex items-center gap-2">
-                    <i data-lucide="bot" class="w-4 h-4"></i> SOCRATIC AI
-                </span>
-                <button id="teacher-mode-btn" class="text-xs border border-white/20 px-2 py-1 rounded hover:border-neon-purple hover:text-neon-purple transition-colors">
-                    TEACHER MODE
-                </button>
-            </header>
-            
-            <div id="chat-history" class="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-hide">
-                <!-- AI Message -->
-                <div class="flex flex-col gap-1 items-start">
-                    <span class="text-[10px] text-neon-purple font-mono">SYSTEM</span>
-                    <div class="bg-white/5 border border-white/10 p-3 rounded-lg rounded-tl-none max-w-[90%] text-sm text-gray-300">
-                        Ready. Input a concept to begin the neural mapping.
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 border-t border-white/10 bg-black/40">
-                <div class="relative">
-                    <input type="text" id="ai-input" placeholder="Explain your logic..." class="w-full bg-black/50 border border-white/10 rounded p-2 text-sm text-white focus:border-neon-purple focus:outline-none focus:ring-1 focus:ring-neon-purple placeholder-gray-600">
-                    <i data-lucide="mic" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-neon-purple cursor-pointer w-4 h-4 transition-colors"></i>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Scripts -->
-    <!-- Monaco Editor Loader -->
-    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
     
-    <!-- App Logic -->
-    <script src="js/state.js"></script>
-    <script src="js/graph-engine.js"></script>
-    <script src="js/editor-integration.js"></script>
-    <script src="js/app.js"></script>
-    
-    <script>
-        // Init Icons
-        lucide.createIcons();
-    </script>
+    <!-- React Root -->
+    <div id="root"></div>
+
+    <!-- Application Logic (JSX) -->
+    <!-- We load this as text/babel for in-browser compilation -->
+    <script type="text/babel" src="js/main.jsx"></script>
 </body>
 </html>
