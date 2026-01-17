@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Helper | Cyber-Cockpit</title>
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS (Play CDN for rapid prototyping) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-cyan': '#00f3ff',
+                        'neon-purple': '#bd00ff',
+                        'void-black': '#0a0a0a',
+                        'glass-black': 'rgba(10, 10, 10, 0.8)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 10px #00f3ff, 0 0 20px #00f3ff44',
+                        'neon-purple': '0 0 10px #bd00ff, 0 0 20px #bd00ff44',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- 3D Graph Engine -->
+    <script src="//unpkg.com/3d-force-graph"></script>
+</head>
+<body class="bg-void-black text-white overflow-hidden h-screen w-screen selection:bg-neon-cyan selection:text-black font-sans">
+
+    <!-- 3D Background Layer -->
+    <div id="3d-graph" class="absolute inset-0 z-0 opacity-40 transition-opacity duration-1000"></div>
+
+    <!-- Phase 1: Holographic Landing -->
+    <div id="landing-phase" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-700">
+        <div class="text-center space-y-8 animate-fade-in-up">
+            <h1 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]">
+                NEURAL NEXUS
+            </h1>
+            <p class="text-cyan-100/70 text-lg tracking-widest uppercase">Cyber-Minimalist Learning Engine</p>
+            
+            <div class="relative group w-[500px] mx-auto mt-12">
+                <div class="absolute -inset-1 bg-gradient-to-r from-neon-cyan to-neon-purple rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                <input type="text" 
+                    id="concept-input" 
+                    placeholder="What concept is confusing you?" 
+                    class="relative w-full bg-black border border-white/10 rounded-lg py-4 px-6 text-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan focus:border-transparent transition-all shadow-2xl"
+                >
+                <i data-lucide="search" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 w-6 h-6"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 2: The Cockpit (Initially Hidden) -->
+    <main id="cockpit-phase" class="relative z-10 w-full h-full grid grid-cols-12 gap-0 hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- Left Panel: Navigator -->
+        <section class="col-span-3 border-r border-white/10 bg-glass-black/50 flex flex-col backdrop-blur-md">
+            <header class="p-4 border-b border-white/10 flex items-center justify-between">
+                <span class="text-neon-cyan font-mono text-sm tracking-wider flex items-center gap-2">
+                    <i data-lucide="network" class="w-4 h-4"></i> NAVIGATOR
+                </span>
+            </header>
+            <div class="flex-1 p-4 overflow-y-auto">
+                <div class="text-xs text-gray-500 font-mono mb-2">ACTIVE NODES</div>
+                <!-- Mock Node List -->
+                <ul class="space-y-2" id="node-list">
+                    <!-- Javascript will populate this -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Center Panel: Workspace -->
+        <section class="col-span-6 flex flex-col bg-transparent relative">
+             <!-- Monaco Editor Container -->
+            <div id="editor-container" class="flex-1 w-full h-full"></div>
+            
+            <!-- Code DNA Sequencer (Overlay) -->
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-800">
+                <div id="dna-bar" class="h-full w-[0%] bg-neon-cyan shadow-[0_0_10px_#00f3ff] transition-all duration-300"></div>
+            </div>
+            <div class="absolute bottom-2 right-4 text-xs font-mono text-neon-cyan bg-black/80 px-2 py-1 rounded border border-neon-cyan/30">
+                COMPLEXITY: <span id="complexity-label">O(1)</span>
+            </div>
+        </section>
+
+        <!-- Right Panel: Socratic AI -->
+        <section class="col-span-3 border-l border-white/10 bg-glass-black/50 flex flex-col backdrop-blur-md">
+            <header class="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
+                <span class="text-neon-purple font-mono text-sm tracking-wider flex items-center gap-2">
+                    <i data-lucide="bot" class="w-4 h-4"></i> SOCRATIC AI
+                </span>
+                <button id="teacher-mode-btn" class="text-xs border border-white/20 px-2 py-1 rounded hover:border-neon-purple hover:text-neon-purple transition-colors">
+                    TEACHER MODE
+                </button>
+            </header>
+            
+            <div id="chat-history" class="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-hide">
+                <!-- AI Message -->
+                <div class="flex flex-col gap-1 items-start">
+                    <span class="text-[10px] text-neon-purple font-mono">SYSTEM</span>
+                    <div class="bg-white/5 border border-white/10 p-3 rounded-lg rounded-tl-none max-w-[90%] text-sm text-gray-300">
+                        Ready. Input a concept to begin the neural mapping.
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-white/10 bg-black/40">
+                <div class="relative">
+                    <input type="text" id="ai-input" placeholder="Explain your logic..." class="w-full bg-black/50 border border-white/10 rounded p-2 text-sm text-white focus:border-neon-purple focus:outline-none focus:ring-1 focus:ring-neon-purple placeholder-gray-600">
+                    <i data-lucide="mic" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-neon-purple cursor-pointer w-4 h-4 transition-colors"></i>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <!-- Monaco Editor Loader -->
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    
+    <!-- App Logic -->
+    <script src="js/state.js"></script>
+    <script src="js/graph-engine.js"></script>
+    <script src="js/editor-integration.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // Init Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
